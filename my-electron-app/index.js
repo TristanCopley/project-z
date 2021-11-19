@@ -8,7 +8,7 @@ function createWindow () {
         frame: false,
         fullscreen: true,
         resizable: false,
-        icon: __dirname + '/assets/icons/appIcon.png',
+        icon: __dirname + 'my-electron-app/assets/icons/appIcon.png',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
@@ -45,3 +45,4 @@ app.on('window-all-closed', () => {
 try {
     require('electron-reloader')(module);
 } catch {}
+
