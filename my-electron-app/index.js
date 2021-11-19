@@ -16,12 +16,11 @@ function createWindow () {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-
+    win.removeMenu()
     win.once('ready-to-show', () => {
         win.webContents.setZoomFactor(1)
         win.show()
     })
-    win.removeMenu()
     win.loadFile('index.html')
 }
 

@@ -26,11 +26,18 @@ window.requestAnimationFrame(time => {
 });
 
 function update(dt) {
+
 }
 
 function render() {
     ctx.beginPath();
     ctx.clearRect(0, 0, c.width, c.height);
-    ctx.fillRect(1920 - previousTime,10,100,100);
+    //ctx.globalAlpha = 1 ;
+    //ctx.fillRect(0,0, c.width, c.height);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#FF0000";
+    ctx.font = `20px Verdana`;
+    ctx.fillText(previousTime, 0, 20);
+    ctx.fillStyle = "#000000";
 
 }
