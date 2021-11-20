@@ -4,6 +4,8 @@ let ctx = c.getContext("2d");
 
 let previousTime = 0.0;
 
+// dt = 7
+
 const loop = time => {
     // Compute the delta-time against the previous time
     const dt = time - previousTime; previousTime = time;
@@ -12,7 +14,7 @@ const loop = time => {
     update(dt);
 
     // Draw
-    render()
+    render();
 
     // Repeat
     window.requestAnimationFrame(loop);
@@ -24,6 +26,20 @@ window.requestAnimationFrame(time => {
 
     window.requestAnimationFrame(loop);
 });
+
+// Declare camera object
+
+const camera = {
+    xPosition: 0,
+    yPosition: 0,
+    xVelocity: 0,
+    yVelocity: 0,
+    xAcceleration: 0,
+    yAcceleration: 0,
+    xShake: 0,
+    yShake: 0,
+};
+
 
 function update(dt) {
 
@@ -37,7 +53,6 @@ function render() {
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(previousTime, 0, 20);
+    ctx.fillText(camera.xPosition, 0, 20);
     ctx.fillStyle = "#000000";
-
 }
