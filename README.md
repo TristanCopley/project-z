@@ -1,2 +1,2 @@
 # project-z
-Project Z is an underdevelopment tower defense game.
+Project Z is an underdevelopment top down FPS.
