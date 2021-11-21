@@ -6,6 +6,57 @@ let previousTime = 0.0;
 
 // dt = ~7
 
+// Declare camera object
+const key = {
+    up: 87,
+    down: 83,
+    left: 65,
+    right: 68,
+};
+
+// Declare camera object
+/*const camera = {
+    xPosition: 0,
+    yPosition: 0,
+    xVelocity: 0,
+    yVelocity: 0,
+    xAcceleration: 0,
+    yAcceleration: 0,
+    xShake: 0,
+    yShake: 0,
+};*/
+
+// Declare player object
+const player = {
+    xPosition: 0,
+    yPosition: 0,
+    xVelocity: 0,
+    yVelocity: 0,
+    xAcceleration: 0,
+    yAcceleration: 0,
+    direction: 0,
+    maxHealth: 100,
+    health: 100,
+    assetsLocation: '/assets/playerAssets',
+    weaponSlot: {
+        primary: "Rifle",
+        secondary: "Pistol",
+        melee: "Knife",
+    },
+};
+
+// Enemy Dictionary
+
+/*const enemyDataDictionary = [
+    {
+        type: 'Crawler',
+        maxHealth: 100,
+        health: 70,
+        lifespan: 0,
+        assetsLocation: '/assets/enemyAssets/enemy_0',
+    },
+];*/
+
 const loop = time => {
     // Compute the delta-time against the previous time
     const dt = time - previousTime; previousTime = time;
@@ -50,7 +101,7 @@ function render() {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${enemyDataDictionary[0].lifespan} Y:${camera.yPosition}`, 0, 20);
+    ctx.fillText(`X:${player.xPosition} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
@@ -66,81 +117,37 @@ let downPressed = false;
 
 // Detects key down
 function keyDownHandler(event) {
-    if(event.keyCode === 39) {
+    if(event.keyCode === key.right) {
         rightPressed = true;
     }
-    else if(event.keyCode === 37) {
+    else if(event.keyCode === key.left) {
         leftPressed = true;
     }
-    if(event.keyCode === 40) {
+    if(event.keyCode === key.down) {
         downPressed = true;
     }
-    else if(event.keyCode === 38) {
+    else if(event.keyCode === key.up) {
         upPressed = true;
     }
 }
 
 // Detects key up
 function keyUpHandler(event) {
-    if(event.keyCode === 39) {
+    if(event.keyCode === key.right) {
         rightPressed = false;
     }
-    else if(event.keyCode === 37) {
+    else if(event.keyCode === key.left) {
         leftPressed = false;
     }
-    if(event.keyCode === 40) {
+    if(event.keyCode === key.down) {
         downPressed = false;
     }
-    else if(event.keyCode === 38) {
+    else if(event.keyCode === key.up) {
         upPressed = false;
     }
 }
 
-// Declare camera object
-const camera = {
-    xPosition: 0,
-    yPosition: 0,
-    xVelocity: 0,
-    yVelocity: 0,
-    xAcceleration: 0,
-    yAcceleration: 0,
-    xShake: 0,
-    yShake: 0,
-};
-
-// Declare player object
-const player = {
-    xPosition: 0,
-    yPosition: 0,
-    xVelocity: 0,
-    yVelocity: 0,
-    xAcceleration: 0,
-    yAcceleration: 0,
-    direction: 0,
-    maxHealth: 100,
-    health: 100,
-    assetsLocation: '/assets/playerAssets',
-    weaponSlot: {
-        primary: "Rifle",
-        secondary: "Pistol",
-        melee: "Knife",
-    },
-};
-
-// Enemy Dictionary
-const enemyDataDictionary = [
-    {
-        type: 'Crawler',
-        maxHealth: 100,
-        health: 70,
-        lifespan: 0,
-        assetsLocation: '/assets/enemyAssets/enemy_0',
-    },
-];
-
 function calculatePlayerMovement(dt) {
-
-    // Player movement
     if (upPressed === true) { player.yAcceleration = -1 }
     if (downPressed === true) { player.yAcceleration = 1 }
     if (leftPressed === true) { player.xAcceleration = -1 }
@@ -154,5 +161,4 @@ function calculatePlayerMovement(dt) {
 
     player.xPosition += player.xVelocity
     player.yPosition += player.yVelocity
-
 }
