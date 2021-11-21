@@ -8,7 +8,7 @@ function createWindow () {
         frame: false,
         fullscreen: true,
         resizable: false,
-        icon: __dirname + '/assets/icons/appIcon.png',
+        icon: __dirname + '/assets/gameIcons/appIcon.png',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
