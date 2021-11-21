@@ -12,6 +12,8 @@
     "electron": "^16.0.1"
   },
   "dependencies": {
-    "electron-reloader": "^1.2.1"
+    "audic": "^3.0.0",
+    "electron-reloader": "^1.2.1",
+    "sound-play": "^1.1.0"
   }
 }

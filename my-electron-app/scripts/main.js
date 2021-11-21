@@ -4,11 +4,17 @@ let ctx = c.getContext("2d");
 let cw = c.width / -2
 let ch = c.height / -2
 
-
 let previousTime = 0.0;
 
 // dt is roughly ~7
 
+// Audio function
+function play() {
+    let audio = new Audio('assets/audio/music1.mp3');
+    audio.play()
+}
+
+play()
 // Gameplay Constants
 let friction = 0.9
 
@@ -44,7 +50,8 @@ const player = {
     maxHealth: 100,
     health: 100,
     moveSpeed: 0.005,
-    assetsLocation: '/assets/playerAssets',
+    assetsLocation: '/assets/player/player_',
+    animation: 'idle',
     weaponSlot: {
         primary: "Rifle",
         secondary: "Pistol",
@@ -98,6 +105,7 @@ function render(dt) {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(player.xPosition - camera.xPosition, player.yPosition - camera.yPosition, 20, 20)
 
+    //ctx.drawImage(, 0, 0);
 
     ctx.fillStyle = "#0020ff";
     ctx.fillRect(0 - camera.xPosition,0 - camera.yPosition, 20, 20)
