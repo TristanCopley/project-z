@@ -7,7 +7,7 @@ let ch = c.height / -2
 
 let previousTime = 0.0;
 
-// dt = ~7
+// dt is roughly ~7
 
 // Gameplay Constants
 let friction = 0.9
@@ -43,7 +43,7 @@ const player = {
     direction: 0,
     maxHealth: 100,
     health: 100,
-    moveSpeed: 0.01,
+    moveSpeed: 0.005,
     assetsLocation: '/assets/playerAssets',
     weaponSlot: {
         primary: "Rifle",
@@ -71,7 +71,7 @@ const loop = time => {
     update(dt);
 
     // Draw
-    render();
+    render(dt);
 
     // Repeat
     window.requestAnimationFrame(loop);
@@ -89,10 +89,10 @@ function update(dt) {
     calculateCamera()
 }
 
-function render() {
+function render(dt) {
     // Begin render
     ctx.clearRect(0, 0, c.width, c.height);
-    ctx.beginPath(); // Used for drawing non-images
+    //ctx.beginPath(); // Used for drawing non-images
 
     // Draw temp square as player
     ctx.fillStyle = "#FFFFFF";
@@ -105,7 +105,7 @@ function render() {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${player.xPosition} Y:${player.yPosition}`, 0, 20);
+    ctx.fillText(`X:${dt} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
