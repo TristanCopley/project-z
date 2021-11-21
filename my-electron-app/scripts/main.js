@@ -22,8 +22,8 @@ const key = {
 
 // Declare camera object
 const camera = {
-    xPosition: c.width / -2,
-    yPosition: c.height / -2,
+    xPosition: 0,
+    yPosition: 0,
     xVelocity: 0,
     yVelocity: 0,
     xAcceleration: 0,
@@ -173,6 +173,6 @@ function calculatePlayerMovement(dt) {
 }
 
 function calculateCamera() {
-    camera.xPosition = cw + player.yPosition
+    camera.xPosition = cw + player.xPosition
     camera.yPosition = ch + player.yPosition
 }
