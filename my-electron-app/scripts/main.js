@@ -9,12 +9,12 @@ let previousTime = 0.0;
 // dt is roughly ~7
 
 // Audio function
-function play() {
-    let audio = new Audio('assets/audio/music1.mp3');
+function play(src) {
+    let audio = new Audio(src);
     audio.play()
 }
-
-play()
+play('assets/audio/music1.mp3')
+play('assets/audio/music2.mp3')
 // Gameplay Constants
 let friction = 0.9
 
@@ -78,7 +78,7 @@ const loop = time => {
     update(dt);
 
     // Draw
-    render(dt);
+    render();
 
     // Repeat
     window.requestAnimationFrame(loop);
@@ -96,7 +96,7 @@ function update(dt) {
     calculateCamera()
 }
 
-function render(dt) {
+function render() {
     // Begin render
     ctx.clearRect(0, 0, c.width, c.height);
     //ctx.beginPath(); // Used for drawing non-images
@@ -113,7 +113,7 @@ function render(dt) {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${dt} Y:${player.yPosition}`, 0, 20);
+    ctx.fillText(`X:${1} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
