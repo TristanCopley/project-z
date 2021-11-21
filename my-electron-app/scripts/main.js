@@ -9,12 +9,13 @@ let previousTime = 0.0;
 // dt is roughly ~7
 
 // Audio function
-function play(src) {
+function play(src, vol) {
     let audio = new Audio(src);
+    audio.volume = vol;
     audio.play()
 }
-play('assets/audio/music1.mp3')
-play('assets/audio/music2.mp3')
+play('assets/audio/music1.mp3', 0.5)
+play('assets/audio/music2.mp3', 1)
 // Gameplay Constants
 let friction = 0.9
 
