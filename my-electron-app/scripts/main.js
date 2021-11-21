@@ -1,10 +1,16 @@
 // Declare canvas variables
 let c = document.getElementById("gameSpace");
 let ctx = c.getContext("2d");
+let cw = c.width / -2
+let ch = c.height / -2
+
 
 let previousTime = 0.0;
 
 // dt = ~7
+
+// Gameplay Constants
+let friction = 0.9
 
 // Declare camera object
 const key = {
@@ -15,16 +21,16 @@ const key = {
 };
 
 // Declare camera object
-/*const camera = {
-    xPosition: 0,
-    yPosition: 0,
+const camera = {
+    xPosition: c.width / -2,
+    yPosition: c.height / -2,
     xVelocity: 0,
     yVelocity: 0,
     xAcceleration: 0,
     yAcceleration: 0,
     xShake: 0,
     yShake: 0,
-};*/
+};
 
 // Declare player object
 const player = {
@@ -37,6 +43,7 @@ const player = {
     direction: 0,
     maxHealth: 100,
     health: 100,
+    moveSpeed: 0.01,
     assetsLocation: '/assets/playerAssets',
     weaponSlot: {
         primary: "Rifle",
@@ -45,9 +52,8 @@ const player = {
     },
 };
 
-// Enemy Dictionary
-
-/*const enemyDataDictionary = [
+// Entity Dictionary
+const entityDataDictionary = [
     {
         type: 'Crawler',
         maxHealth: 100,
@@ -55,7 +61,7 @@ const player = {
         lifespan: 0,
         assetsLocation: '/assets/enemyAssets/enemy_0',
     },
-];*/
+];
 
 const loop = time => {
     // Compute the delta-time against the previous time
@@ -78,13 +84,9 @@ window.requestAnimationFrame(time => {
     window.requestAnimationFrame(loop);
 });
 
-
-// Gameplay Constants
-let friction = 0.9
-
 function update(dt) {
-
     calculatePlayerMovement(dt)
+    calculateCamera()
 }
 
 function render() {
@@ -93,10 +95,12 @@ function render() {
     ctx.beginPath(); // Used for drawing non-images
 
     // Draw temp square as player
-
     ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(player.xPosition, player.yPosition, 20, 20)
+    ctx.fillRect(player.xPosition - camera.xPosition, player.yPosition - camera.yPosition, 20, 20)
 
+
+    ctx.fillStyle = "#0020ff";
+    ctx.fillRect(0 - camera.xPosition,0 - camera.yPosition, 20, 20)
 
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
@@ -106,7 +110,6 @@ function render() {
 }
 
 // Key Handler
-
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
@@ -153,12 +156,23 @@ function calculatePlayerMovement(dt) {
     if (leftPressed === true) { player.xAcceleration = -1 }
     if (rightPressed === true) { player.xAcceleration = 1 }
 
-    player.xVelocity = player.xAcceleration * dt * friction
-    player.yVelocity = player.yAcceleration * dt * friction
+    player.xAcceleration = -1 * player.xAcceleration * ((Math.abs(player.xAcceleration) + Math.abs(player.yAcceleration) - 2) + (-1 * Math.sqrt(0.5) * (Math.round(( Math.abs(player.xAcceleration) + Math.abs(player.yAcceleration) ) / 4))))
+    player.yAcceleration = -1 * player.yAcceleration * ((Math.abs(Math.round(player.xAcceleration)) + Math.abs(player.yAcceleration) - 2) + (-1 * Math.sqrt(0.5) * (Math.round(( Math.abs(Math.round(player.xAcceleration)) + Math.abs(player.yAcceleration) ) / 4))))
+
+    player.xVelocity += player.xAcceleration * dt * player.moveSpeed
+    player.yVelocity += player.yAcceleration * dt * player.moveSpeed
+
+    player.xVelocity *= friction
+    player.yVelocity *= friction
 
     player.xAcceleration = 0
     player.yAcceleration = 0
 
-    player.xPosition += player.xVelocity
-    player.yPosition += player.yVelocity
+    player.xPosition += player.xVelocity * dt
+    player.yPosition += player.yVelocity * dt
+}
+
+function calculateCamera() {
+    camera.xPosition = cw + player.yPosition
+    camera.yPosition = ch + player.yPosition
 }
