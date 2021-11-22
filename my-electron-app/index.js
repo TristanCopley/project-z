@@ -1,10 +1,11 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, screen} = require('electron');
 const path = require('path')
 
 function createWindow () {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize
     const win = new BrowserWindow({
-        width: 1920,
-        height: 1080,
+        width: width,
+        height: height,
         frame: false,
         fullscreen: true,
         resizable: false,
@@ -44,3 +45,4 @@ app.on('window-all-closed', () => {
 try {
     require('electron-reloader')(module);
 } catch {}
+
