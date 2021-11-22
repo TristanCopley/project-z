@@ -90,6 +90,11 @@ window.requestAnimationFrame(time => {
 function update(dt) {
     calculatePlayerMovement(dt)
     calculateCamera()
+
+    c.width = window.innerWidth
+    c.height = window.innerHeight
+    cw = window.innerWidth / -2
+    ch = window.innerHeight / -2
 }
 
 function render() {
@@ -110,7 +115,7 @@ function render() {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${frameCount} Y:${player.yPosition}`, 0, 20);
+    ctx.fillText(`X:${window.innerWidth} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
@@ -205,3 +210,4 @@ function calculateCamera() {
     camera.xPosition = cw + player.xPosition
     camera.yPosition = ch + player.yPosition
 }
+
