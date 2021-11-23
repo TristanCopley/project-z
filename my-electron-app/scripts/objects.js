@@ -1,4 +1,4 @@
-// Declare camera object
+// Declare keys and their associated keycode
 const key = {
     up: 87,
     down: 83,
@@ -18,6 +18,21 @@ const camera = {
     yShake: 0,
 };
 
+// Entity Library
+const entity = {
+    runner: {
+        name: 'Runner',
+        maxHealth: 1000,
+        health: 1000,
+        lifespan: 0,
+        direction: 0,
+        movementSpeed: 0.005,
+        boss: false,
+        assetsLocation: '/assets/enemyAssets/enemy_0',
+    },
+}
+
+// Weapons library
 const weapon = {
     rifle: {
         damage: 10,
@@ -25,6 +40,8 @@ const weapon = {
         spread: 1,
         bulletSpeed: 10,
         bulletsPerShot: 1,
+        screenShake: 10,
+        movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
         reloadTime: 120,
@@ -35,8 +52,10 @@ const weapon = {
         ignite: false,
         poison: false,
         bulletType: "standard",
+        bulletSprite: "assets/weapon/rifleBullet",
+        gunSprite: "assets/weapon/rifle",
+        fireSound: "assets/audio/sfx/rifleShot",
     }
-
 }
 
 // Declare player object
@@ -50,7 +69,7 @@ const player = {
     direction: 0,
     maxHealth: 100,
     health: 100,
-    moveSpeed: 0.005,
+    moveSpeed: 0.004,
     assetsLocation: '/assets/player/player_',
     animation: 'idle',
     weaponSlot: {
@@ -61,22 +80,7 @@ const player = {
 };
 
 // Entity Dictionary
-const entities = [
-    {
-        type: 'Crawler',
-        maxHealth: 1000,
-        health: 1000,
-        lifespan: 0,
-        assetsLocation: '/assets/enemyAssets/enemy_0',
-    },
-];
+const entities = [];
 
-const projectiles = [
-    {
-        type: 'Crawler',
-        maxHealth: 1000,
-        health: 1000,
-        lifespan: 0,
-        assetsLocation: '/assets/enemyAssets/enemy_0',
-    },
-];
+// Projectile Dictionary
+const projectiles = [];
