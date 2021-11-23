@@ -1,70 +1,16 @@
 // Declare canvas variables
 let c = document.getElementById("gameSpace");
 let ctx = c.getContext("2d");
-let cw = c.width / -2
-let ch = c.height / -2
+adjustCanvas()
 
 let previousTime = 0.0;
-
 let frameCount = 0;
-
 // dt is roughly ~7
 
 // Gameplay Constants
 let friction = 0.9
 
-// Declare camera object
-const key = {
-    up: 87,
-    down: 83,
-    left: 65,
-    right: 68,
-};
-
-// Declare camera object
-const camera = {
-    xPosition: 0,
-    yPosition: 0,
-    xVelocity: 0,
-    yVelocity: 0,
-    xAcceleration: 0,
-    yAcceleration: 0,
-    xShake: 0,
-    yShake: 0,
-};
-
-// Declare player object
-const player = {
-    xPosition: 0,
-    yPosition: 0,
-    xVelocity: 0,
-    yVelocity: 0,
-    xAcceleration: 0,
-    yAcceleration: 0,
-    direction: 0,
-    maxHealth: 100,
-    health: 100,
-    moveSpeed: 0.005,
-    assetsLocation: '/assets/player/player_',
-    animation: 'idle',
-    weaponSlot: {
-        primary: "Rifle",
-        secondary: "Pistol",
-        melee: "Knife",
-    },
-};
-
-/*// Entity Dictionary
-const entityDataDictionary = [
-    {
-        type: 'Crawler',
-        maxHealth: 100,
-        health: 70,
-        lifespan: 0,
-        assetsLocation: '/assets/enemyAssets/enemy_0',
-    },
-];*/
-
+// Game loop
 const loop = time => {
     // Compute the delta-time against the previous time
     const dt = time - previousTime; previousTime = time;
@@ -79,7 +25,6 @@ const loop = time => {
     // Repeat
     window.requestAnimationFrame(loop);
 };
-
 // Launch
 window.requestAnimationFrame(time => {
     previousTime = time;
@@ -91,10 +36,6 @@ function update(dt) {
     calculatePlayerMovement(dt)
     calculateCamera()
 
-    c.width = window.innerWidth
-    c.height = window.innerHeight
-    cw = window.innerWidth / -2
-    ch = window.innerHeight / -2
 }
 
 function render() {
@@ -114,61 +55,17 @@ function render() {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${previousTime} Y:${player.yPosition}`, 0, 20);
+    ctx.fillText(`X:${player.xPosition} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
+// Audio Function
 function playAudio(src, volume) {
     let audio = new Howl({
         src: [src],
         volume: volume,
     });
     audio.play()
-}
-
-// Key Handler
-document.addEventListener('click', function(){  })
-document.addEventListener('mousedown', function(){ if(mDown === false) { playAudio('assets/audio/sfx/rifleShot.wav', 1) } mDown = true; })
-document.addEventListener('mouseup', function(){ mDown = false; })
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
-
-let mDown = false;
-let rightPressed = false;
-let leftPressed = false;
-let upPressed = false;
-let downPressed = false;
-
-// Detects key down
-function keyDownHandler(event) {
-    if(event.keyCode === key.right) {
-        rightPressed = true;
-    }
-    else if(event.keyCode === key.left) {
-        leftPressed = true;
-    }
-    if(event.keyCode === key.down) {
-        downPressed = true;
-    }
-    else if(event.keyCode === key.up) {
-        upPressed = true;
-    }
-}
-
-// Detects key up
-function keyUpHandler(event) {
-    if(event.keyCode === key.right) {
-        rightPressed = false;
-    }
-    else if(event.keyCode === key.left) {
-        leftPressed = false;
-    }
-    if(event.keyCode === key.down) {
-        downPressed = false;
-    }
-    else if(event.keyCode === key.up) {
-        upPressed = false;
-    }
 }
 
 function calculatePlayerMovement(dt) {
@@ -198,3 +95,9 @@ function calculateCamera() {
     camera.yPosition = ch + player.yPosition
 }
 
+function adjustCanvas() {
+    c.width = window.innerWidth
+    c.height = window.innerHeight
+    cw = window.innerWidth / -2
+    ch = window.innerHeight / -2
+}
