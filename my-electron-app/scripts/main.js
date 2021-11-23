@@ -54,7 +54,7 @@ const player = {
     },
 };
 
-// Entity Dictionary
+/*// Entity Dictionary
 const entityDataDictionary = [
     {
         type: 'Crawler',
@@ -63,7 +63,7 @@ const entityDataDictionary = [
         lifespan: 0,
         assetsLocation: '/assets/enemyAssets/enemy_0',
     },
-];
+];*/
 
 const loop = time => {
     // Compute the delta-time against the previous time
@@ -98,7 +98,6 @@ function update(dt) {
 }
 
 function render() {
-    if (mDown === true && Math.round(frameCount % 10) === 0) { play('assets/audio/sfx/rifleShot.wav', 1) }
     // Begin render
     ctx.clearRect(0, 0, c.width, c.height);
     //ctx.beginPath(); // Used for drawing non-images
@@ -115,28 +114,26 @@ function render() {
     // Draws X and Y for camera
     ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${window.innerWidth} Y:${player.yPosition}`, 0, 20);
+    ctx.fillText(`X:${previousTime} Y:${player.yPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
-// Audio function
-function play(src, volume) {
-    let audio = new Audio(src);
-    audio.volume = volume;
+function playAudio(src, volume) {
+    let audio = new Howl({
+        src: [src],
+        volume: volume,
+    });
     audio.play()
 }
 
-//play('assets/audio/music1.mp3', 0.5)
-//play('assets/audio/sfx/rifleShot.wav', 1)
-
 // Key Handler
-document.addEventListener('mousedown', mouseDown, false)
-document.addEventListener('mouseup', mouseUp, false)
+document.addEventListener('click', function(){  })
+document.addEventListener('mousedown', function(){ if(mDown === false) { playAudio('assets/audio/sfx/rifleShot.wav', 1) } mDown = true; })
+document.addEventListener('mouseup', function(){ mDown = false; })
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
 let mDown = false;
-let mUp = false;
 let rightPressed = false;
 let leftPressed = false;
 let upPressed = false;
@@ -156,16 +153,6 @@ function keyDownHandler(event) {
     else if(event.keyCode === key.up) {
         upPressed = true;
     }
-}
-
-function mouseDown(event) {
-    mDown = true;
-    mUp = false;
-}
-
-function mouseUp(event) {
-    mDown = false;
-    mUp = true;
 }
 
 // Detects key up

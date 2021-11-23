@@ -1,5 +1,5 @@
 const { app, BrowserWindow, screen} = require('electron');
-const path = require('path')
+const path = require('path');
 
 function createWindow () {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -40,7 +40,6 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
-
 // For live display of program
 try {
     require('electron-reloader')(module);
