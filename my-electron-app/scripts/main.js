@@ -214,3 +214,13 @@ function calculateVFX(dt) {
         if (particles[i].deletion === true) {particles.splice(i, 1)}
     }
 }
+
+function spawnEnemyDeathParticle(object, particleCount) {
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(particleTemplate))
+        let tempX = (object.xPosition - player.xPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition))
+        let tempY = (object.yPosition - player.yPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition))
+        let whiteness = Math.random() * 100
+        particles[particles.length - 1].manipulate(object.xPosition, object.yPosition, Math.random() - 0.5 + tempX/2, Math.random() - 0.5 + tempY/2, object.size / 3, 500, Math.random() * 2, 255, whiteness, whiteness)
+    }
+}
