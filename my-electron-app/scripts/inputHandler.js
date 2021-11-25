@@ -1,9 +1,14 @@
-let mouseX = null
-let mouseY = null
+// Declare mouse object
+const mouse = {
+    xPosition: null,
+    yPosition: null,
+    globalXPosition: null,
+    globalYPosition: null,
+};
 
 // Event Listeners
-document.addEventListener('mousemove', e => { mouseX = e.offsetX; mouseY = e.offsetY; });
-document.addEventListener('mousedown', function(){ if (mDown === false) { playSFX( 'assets/audio/sfx/rifleShot.wav', 1)} mDown = true; })
+document.addEventListener('mousemove', e => { mouse.xPosition = e.offsetX; mouse.yPosition = e.offsetY; });
+document.addEventListener('mousedown', function(){ mDown = true; })
 document.addEventListener('mouseup', function(){ mDown = false; })
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
