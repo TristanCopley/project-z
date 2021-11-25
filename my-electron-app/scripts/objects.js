@@ -46,12 +46,12 @@ const entityLib = {
 // Weapons library
 const weaponLib = {
     zapper: {
-        damage: 10,
+        damage: 50,
         fireRate: 95,
         inaccuracy: 500,
         bulletSpeed: 10,
         bulletsPerShot: 1,
-        screenShake: 10,
+        screenShake: 5,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
@@ -229,20 +229,22 @@ class Entity {
         this.xPositionOld = x
         this.yPositionOld = y
     }
-    hitscan(index, a, b, greaterThan, bulletSize) {
+    hitscan(index, a, b, greaterThan, bulletSize, damage) {
         let d = (Math.abs(a * (this.xPosition - player.xPosition) + b * (this.yPosition - player.yPosition))) / (Math.sqrt((a * a) + (b * b)))
         if (d < bulletSize) {
-
-            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.deletion = true;}
-            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.deletion = true;}
+            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.health -= damage;}
+            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.health -= damage;}
         }
-        if (this.deletion === true) {
-            let whiteness = 0
+        if (this.health <= 0) {
+            this.deletion = true
+            camera.shakeAmplitude += 0.5;
+            let temp = (this.xPosition - player.xPosition) ** 2 + (this.yPosition - player.yPosition) ** 2
+            temp < entityDieSFX ? entityDieSFX = temp : entityDieSFX++
             for (let i = 0; i < 6; i++) {
                 particles.push(new Particle(particleTemplate))
                 let tempX = (this.xPosition - player.xPosition) / (Math.abs(this.xPosition - player.xPosition) + Math.abs(this.yPosition - player.yPosition))
                 let tempY = (this.yPosition - player.yPosition) / (Math.abs(this.xPosition - player.xPosition) + Math.abs(this.yPosition - player.yPosition))
-                whiteness = Math.random() * 100
+                let whiteness = Math.random() * 100
                 particles[particles.length - 1].manipulate(this.xPosition, this.yPosition, Math.random() - 0.5 + tempX/2, Math.random() - 0.5 + tempY/2, this.size / 3, 500, Math.random() * 2, 255, whiteness, whiteness)
             }
         }

@@ -36,6 +36,7 @@ let frameCount = 0;
 // Gameplay Constant
 let friction = 0.94
 let fireCooldown = 0
+let entityDieSFX = 0
 
 // Game loop
 const loop = time => {
@@ -117,7 +118,7 @@ function hud() {
     // Draws X and Y for camera
     let stuff = particles.length > 0 ? particles[0].xPosition : ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${stuff} Y:${mouse.yPosition + ch} X2:${1} Y2:${mouse.globalXPosition}`, 0, 20);
+    ctx.fillText(`X:${stuff} Y:${Math.sqrt(entityDieSFX)} X2:${1} Y2:${mouse.globalXPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
@@ -167,7 +168,7 @@ function shoot(dt) {
     if (fireCooldown > 0 || (mouse.xPosition + cw === 0 && mouse.yPosition + ch === 0)) {return}
 
     fireCooldown = weapon.fireRate
-    playSFX(weapon.fireSound, 0.1)
+    playSFX(weapon.fireSound, Math.random() * 0.05 + 0.1)
 
     for (let i = 0; i < weapon.bulletsPerShot; i++) {
 
@@ -187,7 +188,9 @@ function shoot(dt) {
             let b = player.xPosition - mouse.globalXPosition - randomX / multiplier
             if (-a / b >= 0) {greaterThan = 1} else {greaterThan = -1}
             if (mouse.xPosition + cw + randomX / multiplier <= 0) {greaterThan *= -1}
-            for (let i = 0; i < entities.length; i++) {entities[i].hitscan(i, a, b, greaterThan, weapon.bulletSize)}
+            entityDieSFX = 1000000
+            for (let i = 0; i < entities.length; i++) {entities[i].hitscan(i, a, b, greaterThan, weapon.bulletSize, weapon.damage)}
+            if (entityDieSFX < 1000000) {playSFX('assets/audio/sfx/enemyExplosion.wav', 1 / (10 + Math.sqrt(entityDieSFX) / 70))}
         }
     }
 }
