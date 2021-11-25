@@ -4,8 +4,6 @@ let ctx = c.getContext("2d");
 let cw = 0
 let ch = 0
 
-let finalX = 0
-let finalY = 0
 adjustCanvas()
 
 // Audio function
@@ -96,11 +94,16 @@ function calculatePlayerMovement(dt) {
 }
 
 function calculateCamera() {
-    camera.xPosition = cw + player.xPosition
-    camera.yPosition = ch + player.yPosition
+    camera.xPosition = cw + player.xPosition + camera.xShake
+    camera.yPosition = ch + player.yPosition + camera.yShake
 
     mouse.globalXPosition = mouse.xPosition + camera.xPosition
     mouse.globalYPosition = mouse.yPosition + camera.yPosition
+
+    camera.xShake *= 0.9
+    camera.yShake *= 0.9
+
+
 }
 
 function adjustCanvas() {
@@ -114,7 +117,7 @@ function hud() {
     // Draws X and Y for camera
     let stuff = particles.length > 0 ? particles[0].xPosition : ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
-    ctx.fillText(`X:${stuff} Y:${mouse.yPosition + ch} X2:${finalX + cw} Y2:${mouse.globalXPosition}`, 0, 20);
+    ctx.fillText(`X:${stuff} Y:${mouse.yPosition + ch} X2:${1} Y2:${mouse.globalXPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
 }
 
@@ -171,6 +174,8 @@ function shoot(dt) {
         if (weapon.fireType === "projectile") {
 
         } else if (weapon.fireType === "hitscan") {
+            camera.xShake += 5
+            camera.yShake += 5
             tracers.push(new Tracer(tracerTemplate))
             let multiplier = (-cw - ch) / Math.sqrt(((mouse.xPosition + cw) ** 2) + ((mouse.yPosition + ch) ** 2))
             let randomX = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
@@ -187,6 +192,7 @@ function shoot(dt) {
         }
     }
 }
+
 function drawVFX() {
     for (let i = 0; i < tracers.length; i++) {
         tracers[i].draw()
