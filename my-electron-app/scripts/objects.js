@@ -16,6 +16,7 @@ const camera = {
     yAcceleration: 0,
     xShake: 0,
     yShake: 0,
+    shakeAmplitude: 0,
 };
 
 // Entity Library
@@ -73,7 +74,7 @@ const weaponLib = {
         inaccuracy: 400,
         bulletSpeed: 10,
         bulletsPerShot: 1,
-        screenShake: 10,
+        screenShake: 3,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
@@ -96,7 +97,7 @@ const weaponLib = {
         inaccuracy: 900,
         bulletSpeed: 10,
         bulletsPerShot: 8,
-        screenShake: 10,
+        screenShake: 1,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,

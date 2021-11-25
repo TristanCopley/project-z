@@ -100,10 +100,10 @@ function calculateCamera() {
     mouse.globalXPosition = mouse.xPosition + camera.xPosition
     mouse.globalYPosition = mouse.yPosition + camera.yPosition
 
-    camera.xShake *= 0.9
-    camera.yShake *= 0.9
+    camera.shakeAmplitude *= 0.9
 
-
+    camera.xShake = Math.random() * camera.shakeAmplitude
+    camera.yShake = Math.random() * camera.shakeAmplitude
 }
 
 function adjustCanvas() {
@@ -174,8 +174,7 @@ function shoot(dt) {
         if (weapon.fireType === "projectile") {
 
         } else if (weapon.fireType === "hitscan") {
-            camera.xShake += 5
-            camera.yShake += 5
+            camera.shakeAmplitude += weapon.screenShake
             tracers.push(new Tracer(tracerTemplate))
             let multiplier = (-cw - ch) / Math.sqrt(((mouse.xPosition + cw) ** 2) + ((mouse.yPosition + ch) ** 2))
             let randomX = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
