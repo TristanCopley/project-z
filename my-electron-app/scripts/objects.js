@@ -52,6 +52,7 @@ const weaponLib = {
         bulletSpeed: 10,
         bulletsPerShot: 1,
         screenShake: 5,
+        screenEnemyShake: 0.1,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
@@ -67,6 +68,7 @@ const weaponLib = {
         bulletSprite: "assets/weapon/rifleBullet",
         gunSprite: "assets/weapon/rifle",
         fireSound: "assets/audio/sfx/rifleShot.wav",
+        from: "player"
     },
     beamCannon: {
         damage: 10,
@@ -75,6 +77,7 @@ const weaponLib = {
         bulletSpeed: 10,
         bulletsPerShot: 1,
         screenShake: 3,
+        screenEnemyShake: 0.1,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
@@ -90,16 +93,18 @@ const weaponLib = {
         bulletSprite: "assets/weapon/rifleBullet",
         gunSprite: "assets/weapon/rifle",
         fireSound: "assets/audio/sfx/rifleShot.wav",
+        from: "player"
     },
     remington: {
-        damage: 10,
-        fireRate: 400,
+        damage: 90,
+        fireRate: 200,
         inaccuracy: 900,
         bulletSpeed: 10,
         bulletsPerShot: 8,
-        screenShake: 1,
+        screenShake: 10,
+        screenEnemyShake: 2,
         movementInaccuracy: 0.5,
-        knockback: 0,
+        knockback: 10,
         magazineSize: 10,
         reloadTime: 120,
         bulletCount: 90,
@@ -113,6 +118,7 @@ const weaponLib = {
         bulletSprite: "assets/weapon/rifleBullet",
         gunSprite: "assets/weapon/rifle",
         fireSound: "assets/audio/sfx/rifleShot.wav",
+        from: "player"
     },
     m4: {
         damage: 10,
@@ -121,6 +127,7 @@ const weaponLib = {
         bulletSpeed: 10,
         bulletsPerShot: 8,
         screenShake: 10,
+        screenEnemyShake: 0.1,
         movementInaccuracy: 0.5,
         knockback: 0,
         magazineSize: 10,
@@ -136,6 +143,7 @@ const weaponLib = {
         bulletSprite: "assets/weapon/rifleBullet",
         gunSprite: "assets/weapon/rifle",
         fireSound: "assets/audio/sfx/rifleShot.wav",
+        from: "player"
     },
 }
 
@@ -152,11 +160,11 @@ const player = {
     health: 100,
     movementSpeed: 0.04,
     size: 15,
-    selected: "zapper",
+    selected: "remington",
     assetsLocation: '/assets/player/player_',
     animation: 'idle',
     weaponSlot: {
-        primary: "zapper",
+        primary: "remington",
         secondary: "glock",
         melee: "bayonet",
     },
@@ -229,18 +237,19 @@ class Entity {
         this.xPositionOld = x
         this.yPositionOld = y
     }
-    hitscan(index, a, b, greaterThan, bulletSize, damage) {
+    hitscan(index, a, b, greaterThan, weapon) {
         let d = (Math.abs(a * (this.xPosition - player.xPosition) + b * (this.yPosition - player.yPosition))) / (Math.sqrt((a * a) + (b * b)))
-        if (d < bulletSize) {
-            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.health -= damage; spawnEnemyDeathParticle(this, 2);}
-            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.health -= damage; spawnEnemyDeathParticle(this, 2);}
+        if (d < weapon.bulletSize) {
+            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.health -= weapon.damage; spawnEnemyDeathParticle(this, 2);}
+            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.health -= weapon.damage; spawnEnemyDeathParticle(this, 2);}
         }
         if (this.health <= 0) {
             this.deletion = true
-            camera.shakeAmplitude += 0.5;
+            camera.shakeAmplitude += weapon.screenEnemyShake;
+            camera.shakeAmplitude *= 0.94;
             let temp = (this.xPosition - player.xPosition) ** 2 + (this.yPosition - player.yPosition) ** 2
             temp < entityDieSFX ? entityDieSFX = temp : entityDieSFX++
-            spawnEnemyDeathParticle(this, 6)
+            spawnEnemyDeathParticle(this, 3)
         }
     }
 }
@@ -360,6 +369,50 @@ class Particle {
         this.r = r
         this.g = g
         this.b = b
+    }
+    update(dt) {
+        if (this.lifetime <= 0) { this.deletion = true; return}
+        updatePhysics(this, dt)
+        this.lifetime -= dt
+    }
+    draw() {
+        ctx.fillStyle = "rgba("+this.r+","+this.g+","+this.b+","+ this.lifetime / 500 +")"
+        ctx.fillRect(this.xPosition - camera.xPosition - this.size, this.yPosition - camera.yPosition - this.size, this.size * 2, this.size * 2)
+    }
+}
+
+class Projectile {
+    constructor(projectileData) {
+        this.xPosition = projectileData.xPosition
+        this.yPosition = projectileData.yPosition
+        this.xPositionOld = projectileData.xPositionOld
+        this.yPositionOld = projectileData.yPositionOld
+        this.xAcceleration = projectileData.xAcceleration
+        this.yAcceleration = projectileData.yAcceleration
+        this.movementSpeed = projectileData.movementSpeed
+        this.type = projectileData.type
+        this.r = projectileData.color.r
+        this.g = projectileData.color.g
+        this.b = projectileData.color.b
+        this.lifetime = projectileData.lifetime
+        this.size = projectileData.size
+        this.from = projectileData.from
+        this.deletion = projectileData.deletion
+    }
+    manipulate(x, y, xa, ya, size, lifetime, speed, r, g, b, from) {
+        this.xPosition = x
+        this.yPosition = y
+        this.xPositionOld = x
+        this.yPositionOld = y
+        this.xAcceleration = xa
+        this.yAcceleration = ya
+        this.size = size
+        this.lifetime = lifetime
+        this.movementSpeed = speed
+        this.r = r
+        this.g = g
+        this.b = b
+        this.from = from
     }
     update(dt) {
         if (this.lifetime <= 0) { this.deletion = true; return}

@@ -25,7 +25,7 @@ let music = new Howl({
 
 music.play()
 
-for (let i = 0; i < 1000; i++) {
+for (let i = 0; i < 500; i++) {
     spawnEntity(i)
 }
 
@@ -98,10 +98,10 @@ function calculateCamera() {
     camera.xPosition = cw + player.xPosition + camera.xShake
     camera.yPosition = ch + player.yPosition + camera.yShake
 
-    mouse.globalXPosition = mouse.xPosition + camera.xPosition
-    mouse.globalYPosition = mouse.yPosition + camera.yPosition
+    mouse.globalXPosition = mouse.xPosition + camera.xPosition - camera.xShake
+    mouse.globalYPosition = mouse.yPosition + camera.yPosition - camera.yShake
 
-    camera.shakeAmplitude *= 0.9
+    camera.shakeAmplitude *= 0.93
 
     camera.xShake = Math.random() * camera.shakeAmplitude
     camera.yShake = Math.random() * camera.shakeAmplitude
@@ -116,7 +116,8 @@ function adjustCanvas() {
 
 function hud() {
     // Draws X and Y for camera
-    let stuff = particles.length > 0 ? particles[0].xPosition : ctx.fillStyle = "#FF0000";
+    let stuff = particles.length > 0 ? particles[0].xPosition : 0;
+    ctx.fillStyle = "#FF0000";
     ctx.font = `20px Verdana`;
     ctx.fillText(`X:${stuff} Y:${Math.sqrt(entityDieSFX)} X2:${1} Y2:${mouse.globalXPosition}`, 0, 20);
     ctx.fillStyle = "#000000";
@@ -168,18 +169,18 @@ function shoot(dt) {
     if (fireCooldown > 0 || (mouse.xPosition + cw === 0 && mouse.yPosition + ch === 0)) {return}
 
     fireCooldown = weapon.fireRate
-    playSFX(weapon.fireSound, Math.random() * 0.05 + 0.1)
+    playSFX(weapon.fireSound, Math.random() * 0.05 + 0.2)
 
     for (let i = 0; i < weapon.bulletsPerShot; i++) {
+        let randomX = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
+        let randomY = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
 
         if (weapon.fireType === "projectile") {
-
+            new Projectile()
         } else if (weapon.fireType === "hitscan") {
             camera.shakeAmplitude += weapon.screenShake
             tracers.push(new Tracer(tracerTemplate))
             let multiplier = (-cw - ch) / Math.sqrt(((mouse.xPosition + cw) ** 2) + ((mouse.yPosition + ch) ** 2))
-            let randomX = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
-            let randomY = (weapon.inaccuracy * Math.random() - 0.5 * weapon.inaccuracy)
             let finalX = multiplier * (mouse.xPosition + cw) - cw + player.xPosition + randomX
             let finalY = multiplier * (mouse.yPosition + ch) - ch + player.yPosition + randomY
             tracers[tracers.length - 1].manipulate(-cw + player.xPosition, -ch + player.yPosition, finalX, finalY, weapon.bulletSize * 0.5)
@@ -189,7 +190,7 @@ function shoot(dt) {
             if (-a / b >= 0) {greaterThan = 1} else {greaterThan = -1}
             if (mouse.xPosition + cw + randomX / multiplier <= 0) {greaterThan *= -1}
             entityDieSFX = 1000000
-            for (let i = 0; i < entities.length; i++) {entities[i].hitscan(i, a, b, greaterThan, weapon.bulletSize, weapon.damage)}
+            for (let i = 0; i < entities.length; i++) {entities[i].hitscan(i, a, b, greaterThan, weapon)}
             if (entityDieSFX < 1000000) {playSFX('assets/audio/sfx/enemyExplosion.wav', 1 / (10 + Math.sqrt(entityDieSFX) / 70))}
         }
     }
@@ -217,10 +218,11 @@ function calculateVFX(dt) {
 
 function spawnEnemyDeathParticle(object, particleCount) {
     for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle(particleTemplate))
-        let tempX = (object.xPosition - player.xPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition))
-        let tempY = (object.yPosition - player.yPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition))
-        let whiteness = Math.random() * 100
-        particles[particles.length - 1].manipulate(object.xPosition, object.yPosition, Math.random() - 0.5 + tempX/2, Math.random() - 0.5 + tempY/2, object.size / 3, 500, Math.random() * 2, 255, whiteness, whiteness)
+        particles.push(new Particle(particleTemplate));
+        let tempX = (object.xPosition - player.xPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
+        let tempY = (object.yPosition - player.yPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
+        let temp = trigifyCoords(tempX , tempY);
+        let whiteness = Math.random() * 100;
+        particles[particles.length - 1].manipulate(object.xPosition, object.yPosition, Math.random() - 0.5 + temp[0]/2, Math.random() - 0.5 + temp[1]/2, object.size / (Math.random() * 2 + 2), 250 + 450 * Math.random(), Math.random() * 3, 255, whiteness, whiteness)
     }
 }

@@ -27,7 +27,6 @@ function createWindow () {
 
 app.whenReady().then(() => {
     createWindow()
-
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow()
@@ -40,6 +39,11 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
+
+app.on('browser-window-blur', () => {
+
+})
+
 // For live display of program
 try {
     require('electron-reloader')(module);
