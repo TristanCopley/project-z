@@ -371,7 +371,7 @@ class Particle {
         this.b = b
     }
     update(dt) {
-        if (this.lifetime <= 0) { this.deletion = true; return}
+        if (this.lifetime <= 0) {this.deletion = true; return}
         updatePhysics(this, dt)
         this.lifetime -= dt
     }
