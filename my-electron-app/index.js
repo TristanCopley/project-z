@@ -44,6 +44,10 @@ app.on('browser-window-blur', () => {
 
 })
 
+app.on('browser-window-focus', () => {
+
+})
+
 // For live display of program
 try {
     require('electron-reloader')(module);

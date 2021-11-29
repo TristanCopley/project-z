@@ -104,7 +104,7 @@ const weaponLib = {
         screenShake: 10,
         screenEnemyShake: 2,
         movementInaccuracy: 0.5,
-        knockback: 10,
+        knockback: 90,
         magazineSize: 10,
         reloadTime: 120,
         bulletCount: 90,
@@ -239,9 +239,20 @@ class Entity {
     }
     hitscan(index, a, b, greaterThan, weapon) {
         let d = (Math.abs(a * (this.xPosition - player.xPosition) + b * (this.yPosition - player.yPosition))) / (Math.sqrt((a * a) + (b * b)))
+        let exitXVelocity = 0
+        let exitYVelocity = 0
+        let temp = 0
         if (d < weapon.bulletSize) {
-            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.health -= weapon.damage; spawnEnemyDeathParticle(this, 2);}
-            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.health -= weapon.damage; spawnEnemyDeathParticle(this, 2);}
+            if (this.yPosition - player.yPosition < b / a * (this.xPosition - player.xPosition) && greaterThan === -1) {this.health -= weapon.damage; temp = 1}
+            if (this.yPosition - player.yPosition > b / a * (this.xPosition - player.xPosition) && greaterThan === 1) {this.health -= weapon.damage; temp = 1}
+        }
+        if (temp === 1) {
+            temp = calculateAngle(this)
+            exitXVelocity = temp[0]
+            exitYVelocity = temp[1]
+
+            this.xAcceleration += temp[0] * weapon.knockback
+            this.yAcceleration += temp[1] * weapon.knockback
         }
         if (this.health <= 0) {
             this.deletion = true
@@ -249,8 +260,11 @@ class Entity {
             camera.shakeAmplitude *= 0.94;
             let temp = (this.xPosition - player.xPosition) ** 2 + (this.yPosition - player.yPosition) ** 2
             temp < entityDieSFX ? entityDieSFX = temp : entityDieSFX++
-            spawnEnemyDeathParticle(this, 3)
+            spawnEnemyDeathParticle(this, 3, exitXVelocity, exitYVelocity)
         }
+    }
+    projectileCollision() {
+
     }
 }
 

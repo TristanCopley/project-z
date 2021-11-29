@@ -4,6 +4,8 @@ let ctx = c.getContext("2d");
 let cw = 0
 let ch = 0
 
+let gameFocused = true
+
 adjustCanvas()
 
 // Audio function
@@ -216,13 +218,16 @@ function calculateVFX(dt) {
     }
 }
 
-function spawnEnemyDeathParticle(object, particleCount) {
+function spawnEnemyDeathParticle(object, particleCount, xVelocity, yVelocity) {
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(particleTemplate));
-        let tempX = (object.xPosition - player.xPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
-        let tempY = (object.yPosition - player.yPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
-        let temp = trigifyCoords(tempX , tempY);
         let whiteness = Math.random() * 100;
-        particles[particles.length - 1].manipulate(object.xPosition, object.yPosition, Math.random() - 0.5 + temp[0]/2, Math.random() - 0.5 + temp[1]/2, object.size / (Math.random() * 2 + 2), 250 + 450 * Math.random(), Math.random() * 3, 255, whiteness, whiteness)
+        particles[particles.length - 1].manipulate(object.xPosition, object.yPosition, Math.random() - 0.5 + xVelocity/2, Math.random() - 0.5 + yVelocity/2, object.size / (Math.random() * 2 + 2), 250 + 450 * Math.random(), Math.random() * 3, 255, whiteness, whiteness)
     }
+}
+
+function calculateAngle(object) {
+    let tempX = (object.xPosition - player.xPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
+    let tempY = (object.yPosition - player.yPosition) / (Math.abs(object.xPosition - player.xPosition) + Math.abs(object.yPosition - player.yPosition));
+    return trigifyCoords(tempX , tempY);
 }
